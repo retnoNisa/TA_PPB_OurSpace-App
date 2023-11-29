@@ -16,6 +16,14 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    HomeContent(),
+    FavoriteView(),
+    NewWidget(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,49 +115,80 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
+        iconTheme: IconThemeData(color: Colors.black), // Set logo color to black
       ),
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/bg.png"),
-                fit: BoxFit.cover,
-              ),
-            ),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.transparent,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  SizedBox(height: 10),
-
-                  // Card for planets page
-                  CardWidget(
-                    imageCard: "assets/images/card_planet.png",
-                    pages: PlanetsView(),
-                    title1: 'EXPLORE',
-                    title2: 'SOLAR',
-                    title3: 'SYSTEM',
-                  ),
-
-                  // Card for astronomy picture page
-                  CardWidget(
-                    imageCard: "assets/images/card_astronomy.jpg",
-                    pages: AstronomyView(),
-                    title1: 'NASA',
-                    title2: 'ASTRONOMY',
-                    title3: 'PICTURE OF THE DAY',
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
-            ),
-          )
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_rounded),
+            label: 'Favorite',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_box),
+            label: 'About',
+          ),
         ],
       ),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  const HomeContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/bg.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: const [
+                SizedBox(height: 10),
+                CardWidget(
+                  imageCard: "assets/images/card_planet.png",
+                  pages: PlanetsView(),
+                  title1: 'EXPLORE',
+                  title2: 'SOLAR',
+                  title3: 'SYSTEM',
+                ),
+                CardWidget(
+                  imageCard: "assets/images/card_astronomy.jpg",
+                  pages: AstronomyView(),
+                  title1: 'NASA',
+                  title2: 'ASTRONOMY',
+                  title3: 'PICTURE OF THE DAY',
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }
@@ -161,4 +200,12 @@ class NewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AboutView();
   }
+}
+
+void main() {
+  runApp(
+    MaterialApp(
+      home: HomeView(),
+    ),
+  );
 }
